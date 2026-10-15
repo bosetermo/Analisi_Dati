@@ -1,0 +1,36 @@
+import pandas as pd
+import numpy as np
+
+# 1. PARAMETRI COSTANTI DELL'ESPERIMENTO
+M_E = 25.0    # Massa equivalente in acqua del thermos (in grammi)
+C_W = 4.186   # Calore specifico dell'acqua in J/(g * °C) [usa 1.0 se vuoi cal/(g * °C)]
+
+# 2. LETTURA DEL FILE CSV
+# Modifica 'dati.csv' con il nome reale del tuo file se diverso
+df = pd.read_csv('dati.csv')
+
+# 3. FILTRAGGIO DATI SOLO PER L'ALLUMINIO
+# Il controllo ignora le differenze tra maiuscole e minuscole
+df_alluminio = df[df['materiale'].astype(str).str.lower() == 'alluminio'].copy()
+
+# 4. CALCOLO DEL CALORE SPECIFICO c PER OGNI MISURA
+# Formula: c = ((m_a + M_e) * c_w * (Tf - Ta)) / (m_c * (T1 - Tf))
+df_alluminio['c_J_gC'] = (
+    (df_alluminio['m_a'] + M_E) * C_W * (df_alluminio['Tf'] - df_alluminio['Ta'])
+) / (df_alluminio['m_c'] * (df_alluminio['T1'] - df_alluminio['Tf']))
+
+# 5. STAMPA DELLE SINGOLE MISURE
+print("=== MISURE DI DETTAGLIO ALLUMINIO ===")
+print(df_alluminio[['m_c', 'm_a', 'T1', 'Ta', 'Tf', 'c_J_gC']])
+
+# 6. ANALISI DELLA MEDIA E DISPERSIONE (Punto 6 della procedura)
+n_misure = len(df_alluminio)
+media = df_alluminio['c_J_gC'].mean()
+dev_std = df_alluminio['c_J_gC'].std()
+errore_std = dev_std / np.sqrt(n_misure) if n_misure > 0 else 0
+
+print("\n=== SINTESI STATISTICA ALLUMINIO ===")
+print(f"Numero di misure valide : {n_misure}")
+print(f"Calore specifico medio  : {media:.3f} J/(g °C)")
+print(f"Deviazione standard (s) : {dev_std:.3f} J/(g °C)")
+print(f"Errore standard media   : {errore_std:.3f} J/(g °C)")
