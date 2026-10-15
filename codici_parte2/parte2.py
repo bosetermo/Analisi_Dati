@@ -17,10 +17,10 @@ Tf = df.iloc[3].to_numpy(dtype=np.float64)
 Me = 25
 sigma_Me=5
 
-sigma_ma = np.zeros(4)
-sigma_Ta = np.zeros(4)
-sigma_mg = np.zeros(4)
-sigma_Tf = np.zeros(4)
+sigma_ma = 0.1
+sigma_Ta = 0.2
+sigma_mg = 0.1
+sigma_Tf = 0
 
 lam = np.zeros(4)          # array di 4 double, inizializzati a 0
 
