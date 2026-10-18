@@ -1,0 +1,63 @@
+Massa equivalente in acqua del thermos (Sezione 0.7)
+
+La massa equivalente in acqua del thermos è stata determinata secondo:
+Me = m2 (T2 - Tf) / (Tf - T1) - m1
+
+dove m1 e T1 sono la massa e la temperatura dell'acqua calda inizialmente nel thermos 1, m2 e T2 quelle dell'acqua fredda nel thermos 2, e Tf la temperatura di equilibrio raggiunta dopo il mescolamento.
+
+-- QUI OCCHIO PERCHÉ HO USATO LE MISURE AL CONTRARIO, M1 E T1 AL POSTO DI M2 E T2 E VICEVERSA, COME ANCHE SCRITTO NEL CODICE --
+
+Le grandezze misurate sono: m1 = 100.5 g, T1 = 4 °C, m2 = 110.6 g, T2 = 44 °C, Tf = 23 °C. Le incertezze sono state stimate come la risoluzione degli strumenti, assumendo un approccio conservativo: σm = 0.1 g per la bilancia e σT = 0.2 °C per il termometro. Poiché la calibrazione del termometro e della bilancia non è stata eseguita, si è assunto che offset e fattori di scala siano trascurabili.
+
+
+-- QUESTA ASSUNZIONE E MOLTO FORTE E SI RISCHIA DI SBAGLIARE, SERIVEREBBE FARE UN FIT DI CALIBRAZIONE PER STIMARE FATTORE DI SCALA E OFFSET MA NON ABBIAMO TEMPO. NEL CODICE IPOTIZZO 2 CASI: ASSENZA DI ERRORI ED ERRORE (DI OFFSET PERCHE QUELLO DI SCALA NON SI POTEVA IPOTIZZARE) PARI ALLA META DELLA RISOLUZIONE DEL TERMOMETRO --
+
+
+Di conseguenza, le misure di temperatura e di massa sono state trattate come indipendenti, senza termini di covarianza. Questa scelta è conservativa: un eventuale errore sistematico comune alle temperature, infatti, si cancellerebbe parzialmente nella formula, poiché Me dipende solo dalle differenze T2 - Tf e Tf - T1.
+
+La propagazione delle incertezze è stata effettuata con la formula:
+
+u²(Me) = Σ_i (∂Me/∂x_i)² σ²(x_i)
+
+con le derivate parziali calcolate analiticamente. Il risultato ottenuto è:
+
+Me = 21.7 ± 2.4 g
+
+Tale valore è compatibile, entro l'incertezza, con il valore di riferimento 25 ± 5 g indicato nella scheda, confermando la plausibilità della misura e la coerenza delle ipotesi semplificative adottate.
+
+-- PERCHE L'INCERTEZZA DIMINUISCE INSERENDO IL TERMINE DI CORRELAZIONE --
+
+Perché il termine di covarianza è negativo
+
+Le derivate parziali di Me rispetto alle temperature hanno segni diversi:
+
+∂Me/∂T1 = +6.43,  ∂Me/∂T2 = +5.82,  ∂Me/∂Tf = -12.25
+
+Il termine di covarianza è
+
+2 σ²corr (dT1·dT2 + dT1·dTf + dT2·dTf)
+
+e i prodotti valgono +37.4, -78.8, -71.3. La loro somma è -112.7 < 0, quindi il termine sottrae varianza: rimuoverlo la fa aumentare.
+
+
+
+La ragione fisica
+
+Se tutte le temperature subissero lo stesso offset ε, le differenze T2 - Tf e Tf - T1 resterebbero invariate, e con esse Me. Infatti:
+
+dT1 + dT2 + dTf = 6.43 + 5.82 - 12.25 = 0
+
+Questa identità implica:
+
+2 (dT1·dT2 + dT1·dTf + dT2·dTf) = -(dT1² + dT2² + dTf²)
+
+cioè il termine di covarianza compensa esattamente i termini diagonali delle temperature quando l'errore sistematico è perfettamente comune.
+
+
+Conclusione
+
+Poiché Me dipende solo dalle differenze tra temperature, un errore comune si cancella. Omettere la covarianza equivale a trattare gli errori come indipendenti e non compensantisi: è l'ipotesi conservativa, che sovrastima l'incertezza finale.
+
+Nota sulle fonti:
+Io: impostato python, calcoli, misure, test di compatibilità (senza chi quadro mi raccomando metterlo sarebbe un errore grave, non stiamo in andamento gaussiano), impostato incertezze correlate e non.
+deepseek: proagazione delle incertezze, considerazione sul termine di covarianza, implementazione in python della propagazione
