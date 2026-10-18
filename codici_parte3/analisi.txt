@@ -60,4 +60,4 @@ Poiché Me dipende solo dalle differenze tra temperature, un errore comune si ca
 
 Nota sulle fonti:
 Io: impostato python, calcoli, misure, test di compatibilità (senza chi quadro mi raccomando metterlo sarebbe un errore grave, non stiamo in andamento gaussiano), impostato incertezze correlate e non.
-deepseek: proagazione delle incertezze, considerazione sul termine di covarianza, implementazione in python della propagazione
+deepseek: proagazione delle incertezze, considerazione sul termine di covarianza, implementazione in python della propagazione.
