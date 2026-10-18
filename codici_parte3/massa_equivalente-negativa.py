@@ -10,16 +10,17 @@ df = pd.read_csv("Dati e annotazioni - 0.7.csv",
 
 ## print(df)
 # prima riga -> array di 4 double
-m2 = df.iloc[0].to_numpy(dtype=np.float64)
-T2 = df.iloc[1].to_numpy(dtype=np.float64)
-m1 = df.iloc[2].to_numpy(dtype=np.float64)
-T1 = df.iloc[3].to_numpy(dtype=np.float64)
-Tf = df.iloc[4].to_numpy(dtype=np.float64)
+m2 = df.iloc[0,0]
+T2 = df.iloc[1,0]
+m1 = df.iloc[2,0]
+T1 = df.iloc[3,0]
+Tf = df.iloc[4,0]
 
-sigma_ma = 0.1
-sigma_Ta = 0.2
-sigma_mg = 0.1
-sigma_Tf = 0
+#print(df)
 
-Me=((m2*(T2-Tf))/(Tf-T1))-m1
+Me=m2*(T2-Tf)/(Tf-T1)-m1
 print(Me)
+
+#esce un risultato negativo seguendo l'ordine delle masse scritto nell'excel. Qui, come quando
+#abbiamo verificato le misure in laboratorio, abbiamo fatto un macello con m1 e m2 (Filippo boia)
+#faccio un nuovo pytohn con i risultati sensati. Questo lo lascio perché si
