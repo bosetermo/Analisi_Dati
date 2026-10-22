@@ -65,12 +65,6 @@ print("\n--- Incertezze individuali ---")
 for i in range(len(lam)):
     print(f"Misura {i+1}: λ = {lam[i]:.3f} ± {u_lam[i]:.3f} cal/g")
 
-# ------------------------------------------------------------
-# 3) Matrice di covarianza (Me è errore comune a tutte le misure)
-#    C_ij = δ_ij · u²_cas(λ_i)  +  σ²_Me · d_Me,i · d_Me,j
-# ------------------------------------------------------------
-C    = np.diag(u2_cas) + (sigma_Me**2) * np.outer(d_Me, d_Me)
-Cinv = np.linalg.inv(C)
 
 # ------------------------------------------------------------
 # 4) Media pesata generalizzata (GLS / MLE)
@@ -78,37 +72,8 @@ Cinv = np.linalg.inv(C)
 N    = len(lam)
 ones = np.ones(N)
 
-lam_bar   = (ones @ Cinv @ lam) / (ones @ Cinv @ ones)
-u_lam_bar = 1.0 / np.sqrt(ones @ Cinv @ ones)
+lam_bar   = np.sum(lam / u2_lam) / np.sum(1.0 / u2_lam)
+u_lam_bar = 1.0 / np.sqrt(np.sum(1.0 / u2_lam))
 
 print(f"\n--- Risultato globale (GLS) ---")
 print(f"λ̄ = {lam_bar:.3f} ± {u_lam_bar:.3f} cal/g")
-
-# Confronto: media pesata SENZA covarianza (per vedere la differenza)
-w_simple      = 1.0 / u2_lam
-lam_bar_s     = np.sum(w_simple * lam) / np.sum(w_simple)
-u_lam_bar_s   = 1.0 / np.sqrt(np.sum(w_simple))
-print(f"   (senza covarianza sarebbe: {lam_bar_s:.3f} ± {u_lam_bar_s:.3f} cal/g)")
-
-# ------------------------------------------------------------
-# 5) Test del chi quadro
-# ------------------------------------------------------------
-r    = lam - lam_bar
-chi2 = r @ Cinv @ r
-dof  = N - 1
-
-if dof > 0:
-    p_value = 1 - stats.chi2.cdf(chi2, dof)
-    print(f"\n--- Test di consistenza ---")
-    print(f"chi²/dof = {chi2:.2f}/{dof}  ->  chi²/dof = {chi2/dof:.2f}")
-    print(f"p-value  = {p_value:.3f}")
-
-    # Birge ratio se il chi² è alto
-    if chi2 / dof > 1:
-        R = np.sqrt(chi2 / dof)
-        u_lam_bar_birge = u_lam_bar * R
-        print(f"Birge ratio R = {R:.2f}  ->  u(λ̄) corretta = {u_lam_bar_birge:.3f} cal/g")
-    else:
-        print("Incertezze compatibili con la dispersione dei dati.")
-else:
-    print("\nCon N = 1 non è possibile calcolare il chi².")
