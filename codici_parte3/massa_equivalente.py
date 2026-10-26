@@ -87,3 +87,5 @@ u_Me = np.sqrt(u2_Me)
 print(f"Fattore di Correlazione del Termomento assunto costante: 0.0\nMe = {Me:.3f} ± {u_Me:.3f} g")
 comp=(abs(Me-Me_rif))/(sigma_Me_rif**2 + u_Me**2)
 print(f"Test di compatiblità = {comp:.3f}\n")
+
+

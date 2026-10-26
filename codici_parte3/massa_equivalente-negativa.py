@@ -18,7 +18,7 @@ Tf = df.iloc[4,0]
 
 #print(df)
 
-Me=m2*(T2-Tf)/(Tf-T1)-m1
+Me=m1*(T1-Tf)/(Tf-T2)-m2
 print(Me)
 
 #esce un risultato negativo seguendo l'ordine delle masse scritto nell'excel. Qui, come quando
